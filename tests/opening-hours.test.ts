@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { easterSunday, holidayOn, nrwHolidaysForYear } from '@/data/holidays';
+import { formatHours, openingHours } from '@/data/company';
 import { computeOpenStatus, formatClockDisplay, resolveDayPlan } from '@/lib/opening-hours';
 import type { OpenPlanContext } from '@/lib/opening-hours';
 
@@ -194,6 +195,14 @@ describe('formatClockDisplay + pill copy variants', () => {
     expect(formatClockDisplay('13:00')).toBe('13');
     expect(formatClockDisplay('09:00')).toBe('9');
     expect(formatClockDisplay('18:30')).toBe('18:30');
+  });
+
+  it('lists Saturday as geschlossen and treats it as a closed day', () => {
+    const saturday = openingHours.find((p) => p.schemaDays.includes('Saturday'));
+    expect(saturday?.hours).toEqual([]);
+    expect(formatHours(saturday!)).toBe('geschlossen');
+    const plan = resolveDayPlan('2026-01-10', 'Saturday', 2026);
+    expect(plan.kind).toBe('closed');
   });
 
   it('uses Heute geschlossen on Sunday', () => {
