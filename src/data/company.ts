@@ -63,12 +63,12 @@ export const openingHours: OpeningPeriod[] = [
     days: 'Samstag',
     shortDays: 'Sa',
     schemaDays: ['Saturday'],
-    hours: [{ opens: '09:00', closes: '13:00' }],
+    hours: [],
   },
 ];
 
 export const formatHours = (p: OpeningPeriod): string =>
-  p.hours.map((h) => `${h.opens}–${h.closes}`).join(' und ') + ' Uhr';
+  p.hours.length ? p.hours.map((h) => `${h.opens}–${h.closes}`).join(' und ') + ' Uhr' : 'geschlossen';
 
 export const directionsText = [
   {

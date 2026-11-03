@@ -37,6 +37,6 @@ export const faqs: Faq[] = [
   },
   {
     q: 'Wann und wo finde ich euch?',
-    a: 'Du findest uns in der Weberstraße 12 in 51491 Overath. Geöffnet ist Montag bis Freitag von 07:00 bis 13:00 und 14:00 bis 17:00 Uhr sowie samstags von 09:00 bis 13:00 Uhr.',
+    a: 'Du findest uns in der Weberstraße 12 in 51491 Overath. Geöffnet ist Montag bis Freitag von 07:00 bis 13:00 und 14:00 bis 17:00 Uhr. Samstags ist geschlossen.',
   },
 ];

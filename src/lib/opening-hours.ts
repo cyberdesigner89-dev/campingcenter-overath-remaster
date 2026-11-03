@@ -356,5 +356,6 @@ export function openingBootPayload(year = new Date().getFullYear()) {
 }
 
 function formatHoursLabel(p: OpeningPeriod): string {
+  if (!p.hours.length) return `${p.shortDays}: geschlossen`;
   return `${p.shortDays}: ${p.hours.map((h) => `${h.opens}–${h.closes}`).join(' · ')} Uhr`;
 }

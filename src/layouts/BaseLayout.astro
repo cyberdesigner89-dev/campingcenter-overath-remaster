@@ -7,6 +7,7 @@ import MobileMenu from '@/components/layout/MobileMenu.astro';
 import MobileActionBar from '@/components/layout/MobileActionBar.astro';
 import Footer from '@/components/layout/Footer.astro';
 import CookieConsent from '@/components/layout/CookieConsent.astro';
+import SaturdayNotice from '@/components/layout/SaturdayNotice.astro';
 import CompareTray from '@/components/vehicles/CompareTray.astro';
 import CampingCompanion from '@/components/layout/CampingCompanion.astro';
 import { organizationSchema } from '@/lib/schema';
@@ -62,6 +63,7 @@ const boot = buildBootScript();
     <CampingCompanion transition:persist="cco-companion" />
     {/* Legacy ChatWidget removed — it stole FAB clicks after ClientRouter scoped-CSS mismatch. */}
     <CookieConsent />
+    <SaturdayNotice />
     <div class="toast" role="status" aria-live="polite" data-toast transition:persist="cco-toast"></div>
     <script>
       import '@/scripts/site';

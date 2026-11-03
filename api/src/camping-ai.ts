@@ -50,7 +50,7 @@ export function assistCampingRules(message: string): CampingAssistResult {
   if (/öffnungs|oeffnungs|geöffnet|geoeffnet|feiertag|geschlossen|wann habt|habt ihr offen/.test(text)) {
     return {
       title: 'Öffnungszeiten',
-      summary: 'Mo–Fr 07:00–13:00 und 14:00–17:00, Sa 09:00–13:00. Sonntag & NRW-Feiertage geschlossen. Weberstraße 12, Overath.',
+      summary: 'Mo–Fr 07:00–13:00 und 14:00–17:00. Samstag, Sonntag und NRW-Feiertage geschlossen. Weberstraße 12, Overath.',
       provider: 'rules',
       ctaLabel: 'Kontakt',
       ctaHref: '/kontakt/',

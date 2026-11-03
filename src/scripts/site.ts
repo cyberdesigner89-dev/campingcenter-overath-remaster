@@ -393,11 +393,64 @@ function initOpeningSheet(): void {
   });
 }
 
+const SATURDAY_NOTICE_KEY = 'cco:saturday-notice';
+let saturdayNoticeTimer: number | undefined;
+let saturdayNoticeOpener: HTMLElement | null = null;
+
+function saturdayNoticeSeen(): boolean {
+  try {
+    return localStorage.getItem(SATURDAY_NOTICE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function rememberSaturdayNotice(): void {
+  try {
+    localStorage.setItem(SATURDAY_NOTICE_KEY, '1');
+  } catch {
+    /* Private mode still lets the visitor close the notice for this view. */
+  }
+}
+
+function initSaturdayNotice(): void {
+  window.clearTimeout(saturdayNoticeTimer);
+  const dialog = $<HTMLDialogElement>('[data-saturday-notice]');
+  if (!dialog) return;
+  if (dialog.dataset.bound !== '1') {
+    dialog.dataset.bound = '1';
+    dialog.addEventListener('close', () => {
+      lockScroll(false);
+      rememberSaturdayNotice();
+      const back = saturdayNoticeOpener;
+      saturdayNoticeOpener = null;
+      if (back && document.contains(back)) back.focus({ preventScroll: true });
+      else document.getElementById('main')?.focus({ preventScroll: true });
+    });
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    $$('[data-saturday-dismiss]', dialog).forEach((button) => {
+      button.addEventListener('click', () => dialog.close());
+    });
+  }
+  if (saturdayNoticeSeen() || dialog.open) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  saturdayNoticeTimer = window.setTimeout(() => {
+    if (saturdayNoticeSeen() || dialog.open) return;
+    const active = document.activeElement;
+    saturdayNoticeOpener = active instanceof HTMLElement && active !== document.body ? active : null;
+    dialog.showModal();
+    lockScroll(true);
+  }, reduce ? 180 : 650);
+}
+
 function bootPageUi(): void {
   initHeader();
   initMenu();
   initReveal();
   initOpeningSheet();
+  initSaturdayNotice();
   initHeaderTheme();
   initCompanion();
   refreshOpenStatus();
