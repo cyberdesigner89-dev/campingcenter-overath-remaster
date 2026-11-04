@@ -253,25 +253,40 @@ html:has([data-oh-alert]:not([hidden])) {
   --header-alert-h: var(--header-alert-h-active);
 }
 
-/* Soft-nav: disable main morph without Astro-injected VT <style> (CSP style-src hashes). */
+/* Soft-nav: disable main morph without Astro-injected VT <style> (CSP style-src hashes).
+   animation:none never finishes, so the view-transition overlay stays up and
+   swallows taps on the fixed bottom bar (the page then only scrolls/flickers). */
 main#main[data-cco-main] {
   view-transition-name: cco-main;
 }
 
+@keyframes cco-vt-hold {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @layer astro {
+  ::view-transition {
+    pointer-events: none;
+  }
+
   ::view-transition-old(cco-main) {
-    animation: none;
+    animation: cco-vt-hold 1ms linear both;
     opacity: 0;
     mix-blend-mode: normal;
   }
 
   ::view-transition-new(cco-main) {
-    animation: none;
+    animation: cco-vt-hold 1ms linear both;
     mix-blend-mode: normal;
   }
 
   ::view-transition-group(cco-main) {
-    animation: none;
+    animation: cco-vt-hold 1ms linear both;
   }
 }
 
@@ -318,6 +333,17 @@ html {
   html {
     scroll-behavior: smooth;
   }
+}
+
+/* Phones: smooth scrolling fights the router's jump-to-top and a fixed bottom bar, so a tap flickers instead of navigating once. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 63.99em) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+html:active-view-transition {
+  scroll-behavior: auto !important;
 }
 
 body {

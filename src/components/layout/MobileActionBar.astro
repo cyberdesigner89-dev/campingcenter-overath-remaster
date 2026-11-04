@@ -15,11 +15,11 @@ const { inquiryHref = '/kontakt/#formular', inquiryLabel = 'Anfrage' } = Astro.p
     <Icon name="phone" />
     <span>Anrufen</span>
   </a>
-  <a href={url('/wohnmobile/')} data-track="cta_click" data-track-location="action-bar">
+  <a href={url('/wohnmobile/')} data-astro-reload data-track="cta_click" data-track-location="action-bar">
     <Icon name="van" />
     <span>Fahrzeuge</span>
   </a>
-  <a class="ab-primary" href={url(inquiryHref)} data-track="cta_click" data-track-location="action-bar">
+  <a class="ab-primary" href={url(inquiryHref)} data-astro-reload data-track="cta_click" data-track-location="action-bar">
     <Icon name="mail" />
     <span>{inquiryLabel}</span>
   </a>
@@ -31,6 +31,7 @@ const { inquiryHref = '/kontakt/#formular', inquiryLabel = 'Anfrage' } = Astro.p
     inset-inline: 0;
     bottom: 0;
     z-index: var(--z-actionbar, 40);
+    touch-action: manipulation;
     display: grid;
     grid-template-columns: 1fr 1fr 1.25fr;
     gap: 0.4rem;
@@ -50,6 +51,7 @@ const { inquiryHref = '/kontakt/#formular', inquiryLabel = 'Anfrage' } = Astro.p
     justify-content: center;
     gap: 0.1rem;
     min-height: 3.25rem;
+    touch-action: manipulation;
     border-radius: 12px;
     font-size: 0.8rem;
     font-weight: 650;

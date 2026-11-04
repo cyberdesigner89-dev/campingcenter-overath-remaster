@@ -465,6 +465,83 @@ function bootPageUi(): void {
   }
 }
 
+/**
+ * Bottom bar taps must navigate once.
+ * A modal (Saturday notice) sits in the top layer over the bar, so the hit
+ * target is the dialog even though the link is still visible. A second click
+ * during the view transition would abort the first and snap the page back.
+ */
+function bindActionBar(): void {
+  const w = window as Window & { __ccoActionBar?: boolean };
+  if (w.__ccoActionBar) return;
+  w.__ccoActionBar = true;
+
+  const linkAt = (x: number, y: number): HTMLAnchorElement | null => {
+    const bar = document.querySelector('[data-action-bar]');
+    if (!bar) return null;
+    for (const a of bar.querySelectorAll('a')) {
+      const b = a.getBoundingClientRect();
+      if (x >= b.left && x <= b.right && y >= b.top && y <= b.bottom) return a;
+    }
+    return null;
+  };
+
+  document.addEventListener(
+    'click',
+    (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      let link = target.closest('a');
+      if (!link?.closest('[data-action-bar]')) {
+        if (!document.querySelector('dialog[open]')) return;
+        link = linkAt(event.clientX, event.clientY);
+      }
+      if (!link?.closest('[data-action-bar]')) return;
+
+      const raw = link.getAttribute('href') ?? '';
+      if (!raw || /^(tel:|mailto:)/i.test(raw)) return;
+      let dest: URL;
+      try {
+        dest = new URL(link.href, location.href);
+      } catch {
+        return;
+      }
+      if (dest.origin !== location.origin) return;
+
+      const same = dest.pathname === location.pathname && dest.search === location.search;
+      const covered = !link.contains(target);
+      // Same page: scroll once. A full view transition here swaps the document
+      // with itself and the fixed bar flickers.
+      if (same) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        document.querySelectorAll('dialog[open]').forEach((d) => {
+          if (d instanceof HTMLDialogElement) d.close();
+        });
+        if (dest.hash) {
+          const id = decodeURIComponent(dest.hash.slice(1));
+          document.getElementById(id)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+        } else {
+          window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        }
+        return;
+      }
+
+      // The link itself uses data-astro-reload so the browser navigates once.
+      // A modal backdrop sits above the bar; that click never reaches the link.
+      if (!covered) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      document.querySelectorAll('dialog[open]').forEach((d) => {
+        if (d instanceof HTMLDialogElement) d.close();
+      });
+      location.assign(link.href);
+    },
+    true,
+  );
+}
+
+bindActionBar();
 initKeyboardAwareness();
 initConsent();
 initCollections();
