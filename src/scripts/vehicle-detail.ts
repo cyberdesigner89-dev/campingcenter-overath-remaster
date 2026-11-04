@@ -10,7 +10,7 @@ function carousel(track: HTMLElement, onChange: (i: number) => void) {
   const indexNow = () => Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
   const goTo = (i: number, smooth = !reduced()) => {
     const next = Math.max(0, Math.min(count - 1, i));
-    track.scrollTo({ left: next * track.clientWidth, behavior: smooth ? 'smooth' : 'instant' });
+    track.scrollTo({ left: next * track.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
     if (!smooth && next !== current) {
       current = next;
       onChange(next);

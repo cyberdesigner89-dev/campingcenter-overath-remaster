@@ -23,6 +23,7 @@ const finalWidths = usable.length ? usable : [image.width];
   src={image}
   alt={alt}
   formats={['avif', 'webp']}
+  fallbackFormat="webp"
   widths={finalWidths}
   sizes={sizes}
   quality={quality}

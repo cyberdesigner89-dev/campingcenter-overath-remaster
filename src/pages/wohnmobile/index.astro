@@ -8,6 +8,7 @@ import CtaSection from '@/components/sections/CtaSection.astro';
 import { snapshotDate, vehicles, inventorySource } from '@/lib/vehicles';
 import { breadcrumbSchema } from '@/lib/schema';
 import { formatDateDE } from '@/lib/format';
+import { COMPARE_MAX } from '@/lib/collections';
 import { url } from '@/lib/url';
 
 const usedCount = vehicles.filter((v) => v.condition === 'gebraucht').length;
@@ -27,7 +28,7 @@ const crumbs = [{ label: 'Wohnmobile', href: '/wohnmobile/' }];
       <p class="eyebrow">Fahrzeuge im Bestand</p>
       <h1>Wohnmobile in Overath</h1>
       <p class="lead">
-        {newCount} Neufahrzeuge und {usedCount} gebrauchte Wohnmobile – alle bei uns vor Ort. Filtere nach deinen Wünschen, merke dir Favoriten oder vergleiche bis zu drei Fahrzeuge.
+        {newCount} Neufahrzeuge und {usedCount} gebrauchte Wohnmobile – alle bei uns vor Ort. Filtere nach deinen Wünschen, merke dir Favoriten oder vergleiche bis zu {COMPARE_MAX} Fahrzeuge.
       </p>
     </div>
   </section>

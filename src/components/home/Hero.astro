@@ -190,6 +190,23 @@ const facts = [
     color: #ffc778;
   }
 
+  @media (max-width: 63.99em) {
+    /* A full-viewport hero pins the facts under the fixed action bar. Let the hero size to its content. */
+    .hero {
+      min-height: auto;
+    }
+
+    .hero-inner {
+      align-content: start;
+      padding-top: calc(var(--sticky-top) + 1.35rem);
+      padding-bottom: calc(var(--actionbar-h) + 1.15rem);
+    }
+
+    .hero-facts {
+      padding-right: calc(var(--companion-fab-h) + 1.15rem);
+    }
+  }
+
   @media (max-width: 35.99em) {
     .hero-ctas :global(.btn) {
       width: 100%;

@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { easterSunday, holidayOn, nrwHolidaysForYear } from '@/data/holidays';
 import { formatHours, openingHours } from '@/data/company';
-import { computeOpenStatus, formatClockDisplay, resolveDayPlan } from '@/lib/opening-hours';
+import { computeOpenStatus, formatClockDisplay, resolveDayPlan, schedulePayload } from '@/lib/opening-hours';
 import type { OpenPlanContext } from '@/lib/opening-hours';
+import { organizationSchema } from '@/lib/schema';
 
 /** Build a Date that is this wall-clock time in Europe/Berlin. */
 function berlinDate(isoDate: string, hh: number, mm: number): Date {
@@ -203,6 +204,25 @@ describe('formatClockDisplay + pill copy variants', () => {
     expect(formatHours(saturday!)).toBe('geschlossen');
     const plan = resolveDayPlan('2026-01-10', 'Saturday', 2026);
     expect(plan.kind).toBe('closed');
+    const s = computeOpenStatus(berlinDate('2026-01-10', 11, 0));
+    expect(s.state).toBe('closed');
+    expect(s.label).toBe('Heute geschlossen');
+    expect(s.label).not.toMatch(/geöffnet/i);
+    const saturdayPlan = schedulePayload().find((d) => d.d === 'Saturday');
+    expect(saturdayPlan?.h).toEqual([]);
+    const spec = organizationSchema(new URL('https://example.com/')).openingHoursSpecification as {
+      dayOfWeek: string[];
+    }[];
+    expect(spec.flatMap((row) => row.dayOfWeek)).not.toContain('Saturday');
+  });
+
+  it('does not treat Saturday as the next opening day', () => {
+    const s = computeOpenStatus(berlinDate('2026-01-09', 20, 0));
+    expect(s.state).toBe('closed');
+    if (s.state === 'closed') {
+      expect(s.opensNext).toMatch(/Montag/i);
+      expect(s.opensNext).not.toMatch(/Samstag/i);
+    }
   });
 
   it('uses Heute geschlossen on Sunday', () => {

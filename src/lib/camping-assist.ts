@@ -55,7 +55,7 @@ const TOPICS: Topic[] = [
     patterns: [
       /öffnungs|oeffnungs|geöffnet|geoeffnet|habt ihr offen|wann offen|geschlossen|feiertag|wann habt|uhrzeit|öffnungszeit/i,
     ],
-    summary: `Unsere Zeiten: ${hoursText}. Sonntags und an gesetzlichen Feiertagen in NRW sind wir geschlossen.`,
+    summary: `Unsere Zeiten: ${hoursText}. Samstags, sonntags und an gesetzlichen Feiertagen in NRW sind wir geschlossen.`,
     bullets: [
       `${company.address.street}, ${company.address.postalCode} ${company.address.city}`,
       `Telefon ${company.phone.display}`,

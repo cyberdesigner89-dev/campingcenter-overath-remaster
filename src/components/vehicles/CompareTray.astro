@@ -1,12 +1,13 @@
 ---
 import Icon from '@/components/ui/Icon.astro';
+import { COMPARE_MAX } from '@/lib/collections';
 import { url } from '@/lib/url';
 ---
 
 <aside class="ctray" data-compare-tray hidden aria-label="Fahrzeugvergleich">
   <p class="ctray-text">
     <Icon name="compare" />
-    <span><strong data-compare-count>0</strong> von 3 im Vergleich</span>
+    <span><strong data-compare-count>0</strong> von {COMPARE_MAX} im Vergleich</span>
   </p>
   <a class="btn btn-accent btn-sm" href={url('/vergleich/')} data-track="compare_open">Vergleichen</a>
   <button type="button" class="ctray-clear" data-compare-clear aria-label="Vergleich leeren">

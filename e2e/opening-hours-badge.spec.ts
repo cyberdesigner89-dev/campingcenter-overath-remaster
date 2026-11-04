@@ -93,6 +93,34 @@ test.describe('Opening-hours badge geometry', () => {
     });
   }
 
+  test('hours sheet shows the permanent Saturday closure', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('cco:saturday-notice', '1'));
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto(path('/'));
+    await page.locator('[data-oh-open]').click();
+    const sheet = page.locator('#oh-sheet');
+    await expect(sheet).toBeVisible();
+    const note = sheet.locator('.oh-saturday-banner');
+    await expect(note).toBeVisible();
+    await expect(note).toContainText('Samstags dauerhaft geschlossen');
+    await expect(note).toContainText('Ab sofort bleibt das Campingcenter jeden Samstag geschlossen');
+    await expect(sheet.locator('.is-saturday')).toContainText('dauerhaft geschlossen');
+    await expect(sheet.locator('#oh-saturday-title')).toHaveAttribute('id', 'oh-saturday-title');
+    const described = await sheet.getAttribute('aria-describedby');
+    expect(described).toBe('oh-saturday-title');
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(1);
+    await page.keyboard.press('Tab');
+    const inside = await page.evaluate(() => {
+      const dialog = document.querySelector('#oh-sheet');
+      return !!dialog && dialog.contains(document.activeElement);
+    });
+    expect(inside).toBeTruthy();
+    await page.screenshot({ path: '/opt/cursor/artifacts/screenshots/saturday-hours-390.png' });
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.screenshot({ path: '/opt/cursor/artifacts/screenshots/saturday-hours-1280.png' });
+  });
+
   test('forced long open label still fits at 1440 after layout fix', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(path('/'));

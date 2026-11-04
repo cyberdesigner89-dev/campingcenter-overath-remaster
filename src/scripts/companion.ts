@@ -188,11 +188,15 @@ export function setOpen(root: HTMLElement, open: boolean, tab?: string): boolean
       }
     }
     document.body.classList.add('companion-open');
-    setTab(root, tab || 'a11y');
-    const focusTarget =
-      root.querySelector<HTMLElement>('.companion-tab.is-active') ||
-      root.querySelector<HTMLElement>('[data-companion-close]');
-    focusTarget?.focus({ preventScroll: true });
+    const opened = tab || 'a11y';
+    setTab(root, opened);
+    // Chat keeps the caret in the composer. Other tabs land on the tab itself.
+    if (opened !== 'chat') {
+      const focusTarget =
+        root.querySelector<HTMLElement>('.companion-tab.is-active') ||
+        root.querySelector<HTMLElement>('[data-companion-close]');
+      focusTarget?.focus({ preventScroll: true });
+    }
   } else if (panel.open) {
     panel.close();
   } else {

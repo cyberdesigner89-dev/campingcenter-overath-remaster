@@ -308,6 +308,12 @@ html {
   hanging-punctuation: first last;
 }
 
+@media (max-width: 63.99em) {
+  html:has(body[data-actionbar]) {
+    scroll-padding-bottom: calc(4.2rem + var(--companion-fab-h) + 1rem + var(--safe-bottom));
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -455,6 +461,44 @@ a:hover {
   color: var(--graphite);
 }
 
+/*
+ * Text caret: hide the blinking cursor on ordinary page text, buttons,
+ * links, cards, filters, the compare tray, and any contenteditable region
+ * outside the chat. Clicking or selecting text there must not show a caret.
+ * Focus rings (::focus-visible) and text selection stay untouched — this
+ * only changes caret-color, not user-select or outline.
+ *
+ * Exceptions — real typing fields, plus the companion chat composer
+ * (textarea today, contenteditable if the composer ever switches):
+ */
+html {
+  caret-color: transparent;
+}
+
+[contenteditable] {
+  caret-color: transparent;
+}
+
+input:not(
+    [type='button'],
+    [type='submit'],
+    [type='reset'],
+    [type='checkbox'],
+    [type='radio'],
+    [type='range'],
+    [type='file'],
+    [type='image'],
+    [type='color'],
+    [type='hidden']
+  ),
+textarea,
+[data-companion-chat-input],
+[data-companion-chat] [contenteditable=''],
+[data-companion-chat] [contenteditable='true'],
+[data-companion-chat] [contenteditable='plaintext-only'] {
+  caret-color: auto;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -544,6 +588,10 @@ ol.grid {
   display: grid;
   gap: var(--space-7);
   align-items: center;
+}
+
+.split > * {
+  min-width: 0;
 }
 
 @media (min-width: 60em) {
@@ -1027,6 +1075,8 @@ ol.grid {
 .select,
 .textarea {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 3.25rem;
   padding: 0.8rem 1rem;
   border: 1px solid var(--line-strong);
@@ -1396,6 +1446,8 @@ body.scroll-locked {
 @media (max-width: 63.99em) {
   body[data-actionbar] {
     --actionbar-h: 4.2rem;
+    /* Action bar plus the compass, so the last content can scroll clear of both. */
+    padding-bottom: calc(var(--actionbar-h) + var(--companion-fab-h) + 0.85rem + var(--safe-bottom));
   }
 
   /* Chat/Keyboard: Actionbar ist weg – Layout-Offset mitziehen */
@@ -1407,6 +1459,7 @@ body.scroll-locked {
   /* Ankauf-Wizard: sticky Bottom-Nav → Chat/Cookie höher */
   body.page-ankauf {
     --actionbar-h: 4.5rem;
+    padding-bottom: calc(var(--actionbar-h) + var(--companion-fab-h) + 0.85rem + var(--safe-bottom));
   }
 
   body.page-ankauf.bar-hidden,

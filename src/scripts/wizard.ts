@@ -112,9 +112,12 @@ if (form) {
   });
 
   window.addEventListener('popstate', (e) => {
-    const s = (e.state as { wizardStep?: number } | null)?.wizardStep;
-    if (typeof s === 'number') show(Math.min(s, step), { push: false });
-    else if (step > 0) show(0, { push: false });
+    const fromState = (e.state as { wizardStep?: number } | null)?.wizardStep;
+    // Firefox can restore the hash without the history state object.
+    const fromHash = Number(/^#schritt-(\d+)$/.exec(location.hash)?.[1] ?? NaN);
+    const s = typeof fromState === 'number' ? fromState : fromHash - 1;
+    if (s >= 0 && s <= last) show(s, { push: false });
+    else if (step > 0 && !location.hash) show(0, { push: false });
   });
 
   form.addEventListener('change', saveDraft);
