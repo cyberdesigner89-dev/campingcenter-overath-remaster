@@ -304,20 +304,32 @@ function prefill(form: HTMLFormElement): void {
   });
 }
 
-document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach((form) => {
-  form.noValidate = true;
-  prefill(form);
-  bind(form);
-});
+function bootForms(): void {
+  document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach((form) => {
+    if (form.dataset.formBound === '1') return;
+    form.dataset.formBound = '1';
+    form.noValidate = true;
+    prefill(form);
+    bind(form);
+  });
 
-document.querySelectorAll<HTMLButtonElement>('[data-form-again]').forEach((btn) =>
-  btn.addEventListener('click', () => {
-    const success = btn.closest<HTMLElement>('[data-form-success]');
-    const form = success?.parentElement?.querySelector<HTMLFormElement>('form[data-form]');
-    if (!success || !form) return;
-    form.reset();
-    success.hidden = true;
-    form.hidden = false;
-    form.querySelector<Control>('input:not([type=hidden]), select, textarea')?.focus();
-  }),
-);
+  document.querySelectorAll<HTMLButtonElement>('[data-form-again]').forEach((btn) => {
+    if (btn.dataset.formBound === '1') return;
+    btn.dataset.formBound = '1';
+    btn.addEventListener('click', () => {
+      const success = btn.closest<HTMLElement>('[data-form-success]');
+      const form = success?.parentElement?.querySelector<HTMLFormElement>('form[data-form]');
+      if (!success || !form) return;
+      form.reset();
+      success.hidden = true;
+      form.hidden = false;
+      form.querySelector<Control>('input:not([type=hidden]), select, textarea')?.focus();
+    });
+  });
+}
+
+bootForms();
+document.addEventListener('astro:page-load', bootForms);
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) bootForms();
+});

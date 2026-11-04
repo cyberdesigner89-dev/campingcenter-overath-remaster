@@ -114,6 +114,8 @@ import { url } from '@/lib/url';
   import { hasMediaConsent, onConsent } from '@/lib/consent';
   import { track } from '@/lib/analytics';
 
+  const BOUND = '__ccoMapBound';
+
   const load = (el: HTMLElement) => {
     const frame = el.querySelector('[data-map-frame]');
     if (!frame || frame.querySelector('iframe')) return;
@@ -126,11 +128,32 @@ import { url } from '@/lib/url';
     track('map_load');
   };
 
-  document.querySelectorAll<HTMLElement>('[data-map]').forEach((el) => {
-    if (hasMediaConsent()) load(el);
-    el.querySelector('[data-map-load]')?.addEventListener('click', () => load(el));
-  });
-  onConsent((s) => {
-    if (s.media) document.querySelectorAll<HTMLElement>('[data-map]').forEach(load);
+  /** One delegated click plus a consent listener. Re-entry only fills new placeholders. */
+  function bindMaps(): void {
+    const w = window as Window & { [BOUND]?: boolean };
+    if (!w[BOUND]) {
+      w[BOUND] = true;
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const button = target.closest<HTMLElement>('[data-map-load]');
+        if (!button) return;
+        const root = button.closest<HTMLElement>('[data-map]');
+        if (!root) return;
+        event.preventDefault();
+        load(root);
+      });
+      onConsent((s) => {
+        if (s.media) document.querySelectorAll<HTMLElement>('[data-map]').forEach(load);
+      });
+    }
+    if (hasMediaConsent()) document.querySelectorAll<HTMLElement>('[data-map]').forEach(load);
+  }
+
+  bindMaps();
+  document.addEventListener('astro:page-load', bindMaps);
+  document.addEventListener('astro:after-swap', bindMaps);
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) bindMaps();
   });
 </script>

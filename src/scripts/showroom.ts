@@ -19,9 +19,6 @@ interface Item extends FilterableVehicle {
   order: number;
 }
 
-const form = document.querySelector<HTMLFormElement>('[data-filter-form]');
-const grid = document.querySelector<HTMLElement>('[data-grid]');
-
 const numOrNull = (s: string | undefined) => (s ? Number(s) : null);
 
 /** Form field name ↔ FilterState key. Names equal the URL query keys. */
@@ -219,4 +216,16 @@ function init(form: HTMLFormElement, grid: HTMLElement): void {
   });
 }
 
-if (form && grid) init(form, grid);
+function bootShowroom(): void {
+  const form = document.querySelector<HTMLFormElement>('[data-filter-form]');
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  if (!form || !grid || form.dataset.showroomBound === '1') return;
+  form.dataset.showroomBound = '1';
+  init(form, grid);
+}
+
+bootShowroom();
+document.addEventListener('astro:page-load', bootShowroom);
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) bootShowroom();
+});

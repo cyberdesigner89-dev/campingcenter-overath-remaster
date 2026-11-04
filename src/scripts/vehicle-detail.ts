@@ -133,8 +133,26 @@ function initStickyCta(): void {
   targets.forEach((t) => io.observe(t));
 }
 
-document.querySelectorAll<HTMLElement>('[data-gallery]').forEach(initGallery);
-initStickyCta();
+function bootVehiclePage(): void {
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((root) => {
+    if (root.dataset.galleryBound === '1') return;
+    root.dataset.galleryBound = '1';
+    initGallery(root);
+  });
+  const bar = document.querySelector<HTMLElement>('[data-sticky-cta]');
+  if (bar && bar.dataset.stickyBound !== '1') {
+    bar.dataset.stickyBound = '1';
+    initStickyCta();
+  }
+  const id = document.querySelector<HTMLElement>('[data-vehicle-page]')?.dataset.vehiclePage;
+  if (id && document.documentElement.dataset.vehicleTracked !== id) {
+    document.documentElement.dataset.vehicleTracked = id;
+    trackEvent('vehicle_view', { vehicle_id: id });
+  }
+}
 
-const id = document.querySelector<HTMLElement>('[data-vehicle-page]')?.dataset.vehiclePage;
-if (id) trackEvent('vehicle_view', { vehicle_id: id });
+bootVehiclePage();
+document.addEventListener('astro:page-load', bootVehiclePage);
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) bootVehiclePage();
+});

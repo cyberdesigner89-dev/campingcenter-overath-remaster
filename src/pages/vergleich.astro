@@ -121,12 +121,11 @@ const usedGroups = groups.map((g) => ({ ...g, keys: g.keys.filter((k) => labels.
 <script>
   import { onCollectionChange, readCollection } from '@/lib/collections';
 
-  const root = document.querySelector<HTMLElement>('[data-cmp]');
-  const empty = document.querySelector<HTMLElement>('[data-cmp-empty]');
-  const emptyTitle = document.querySelector('[data-cmp-empty-title]');
-  const diff = document.querySelector<HTMLInputElement>('[data-cmp-diff]');
-
   function render(): void {
+    const root = document.querySelector<HTMLElement>('[data-cmp]');
+    const empty = document.querySelector<HTMLElement>('[data-cmp-empty]');
+    const emptyTitle = document.querySelector('[data-cmp-empty-title]');
+    const diff = document.querySelector<HTMLInputElement>('[data-cmp-diff]');
     if (!root || !empty) return;
     const ids = readCollection('compare');
     const known = ids.filter((id) => root.querySelector(`[data-col="${CSS.escape(id)}"]`));
@@ -157,11 +156,25 @@ const usedGroups = groups.map((g) => ({ ...g, keys: g.keys.filter((k) => labels.
     });
   }
 
-  document.querySelector('[data-compare-tray]')?.remove();
+  function bootCompare(): void {
+    const root = document.querySelector<HTMLElement>('[data-cmp]');
+    if (!root || root.dataset.compareBound === '1') return;
+    root.dataset.compareBound = '1';
+    document.querySelector('[data-compare-tray]')?.remove();
+    root.querySelector<HTMLInputElement>('[data-cmp-diff]')?.addEventListener('change', render);
+    render();
+  }
 
-  diff?.addEventListener('change', render);
-  onCollectionChange(render);
-  render();
+  const compareWindow = window as Window & { __ccoCompareListening?: boolean };
+  if (!compareWindow.__ccoCompareListening) {
+    compareWindow.__ccoCompareListening = true;
+    onCollectionChange(render);
+    document.addEventListener('astro:page-load', bootCompare);
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) bootCompare();
+    });
+  }
+  bootCompare();
 </script>
 
 <style>

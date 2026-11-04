@@ -102,22 +102,5 @@ const { id, title, class: className } = Astro.props;
 </style>
 
 <script>
-  import { track } from '@/lib/analytics';
-
-  document.querySelectorAll<HTMLElement>('[data-yt]').forEach((el) => {
-    el.querySelector('[data-yt-play]')?.addEventListener('click', () => {
-      const id = el.dataset.yt ?? '';
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&modestbranding=1`;
-      iframe.title = el.dataset.ytTitle ?? 'YouTube-Video';
-      iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-      iframe.loading = 'lazy';
-      const frame = el.querySelector('.yt-frame');
-      frame?.replaceChildren(iframe);
-      el.classList.add('is-playing');
-      iframe.focus();
-      track('video_play', { video_id: id });
-    });
-  });
+  import '@/scripts/youtube';
 </script>
