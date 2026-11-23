@@ -1,7 +1,11 @@
 """Normalise a mobile.de dealer-page export into src/data/inventory.json.
 
 Input: the ad objects embedded in https://home.mobile.de/CAMPINGCENTEROVERATHGMBHCOKG
-(extracted from the page's RSC payload, see README → "Fahrzeugbestand aktualisieren").
+(extracted from the page's RSC payload).
+
+The scheduled refresh (no API key) is scripts/sync-inventory.ts. It uses the same
+field rules as normalise() below. This CLI remains the offline path for a
+previously extracted ads JSON file.
 
 Only fields present in the listing are carried over. Nothing is derived that the
 listing does not state; contradictory values (e.g. title says "Automatik" while the

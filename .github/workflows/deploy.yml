@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Commit SHA to build and deploy. Empty uses the triggering commit.
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -18,6 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # A GITHUB_TOKEN push does not start this workflow. The inventory sync
+          # calls it directly and passes the new commit so Pages builds that stock.
+          ref: ${{ github.event_name == 'workflow_call' && inputs.ref || github.sha }}
 
       - uses: actions/setup-node@v4
         with:

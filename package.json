@@ -18,7 +18,8 @@
     "verify": "node scripts/verify-dist.mjs",
     "ci": "npm run check && npm run lint && npm run test && npm run build && npm run verify",
     "ci:e2e": "npm run build && npm run test:e2e",
-    "assets": "python scripts/prepare_assets.py"
+    "assets": "python scripts/prepare_assets.py",
+    "inventory:sync": "node --experimental-strip-types scripts/sync-inventory.ts"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
