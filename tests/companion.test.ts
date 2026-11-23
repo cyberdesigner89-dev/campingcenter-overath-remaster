@@ -13,8 +13,9 @@ describe('CampingCompanion support center', () => {
 
     expect(companion).toContain('data-companion');
     expect(companion).toContain('companion-fab');
-    expect(companion).toContain('companion-fab-compass');
-    expect(companion).toContain('companion-fab-needle');
+    expect(companion).toContain('UniversalAccessIcon');
+    expect(companion).not.toContain('companion-fab-compass');
+    expect(companion).not.toContain('companion-fab-needle');
     expect(companion).toContain('Hilfe, Camping-KI und Barrierefreiheit öffnen');
     expect(companion).toContain('Hilfe & Barrierefreiheit');
     expect(companion).toContain('Wir helfen dir gerne weiter.');
@@ -22,9 +23,13 @@ describe('CampingCompanion support center', () => {
     expect(companion).toContain('data-companion-tab="a11y"');
     expect(companion).toContain('data-companion-tab="chat"');
     expect(companion).toContain('data-companion-tab="contact"');
-    expect(companion).toContain('Recognizable a11y pictogram');
-    expect(companion).toContain('#1a73e8');
     expect(companion).toContain('companion-tab-a11y-svg');
+    expect(companion).not.toContain('#1a73e8');
+    const accessIcon = readFileSync(join(root, 'src/components/ui/UniversalAccessIcon.astro'), 'utf8');
+    expect(accessIcon).toContain('aria-hidden="true"');
+    expect(accessIcon).toContain('#3b499f');
+    expect(accessIcon).toContain('stroke-linecap="round"');
+    expect(accessIcon).toContain('universal-access-icon');
     expect(companion).toContain("import { initCompanion } from '@/scripts/companion'");
     expect(companion).toContain("astro:page-load");
     expect(companion).toContain("astro:after-swap");

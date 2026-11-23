@@ -17,8 +17,10 @@ test.describe('CampingCompanion smoke', () => {
       'aria-label',
       'Hilfe, Camping-KI und Barrierefreiheit öffnen',
     );
-    await expect(page.locator('.companion-fab-compass')).toHaveCount(1);
+    await expect(page.locator('.companion-fab .universal-access-icon')).toHaveCount(1);
     await expect(page.locator('.companion-tab-a11y-svg')).toHaveCount(1);
+    await expect(page.locator('.companion-fab-compass')).toHaveCount(0);
+    await expect(page.locator('.universal-access-icon')).toHaveCount(2);
 
     await page.locator('[data-companion-open]').click();
     await expect(page.locator('[data-companion-panel]')).toHaveAttribute('open', '');

@@ -1472,7 +1472,7 @@ body.scroll-locked {
 @media (max-width: 63.99em) {
   body[data-actionbar] {
     --actionbar-h: 4.2rem;
-    /* Action bar plus the compass, so the last content can scroll clear of both. */
+    /* Action bar plus the accessibility button, so the last content can scroll clear of both. */
     padding-bottom: calc(var(--actionbar-h) + var(--companion-fab-h) + 0.85rem + var(--safe-bottom));
   }
 

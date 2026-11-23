@@ -1,0 +1,38 @@
+---
+/**
+ * Classic Universal Access mark (UN accessibility symbol):
+ * royal-blue disc, even white ring with a narrow blue outer rim,
+ * white figure with a round head, horizontal arms, narrow torso
+ * and slightly spread legs. Corners outside the disc stay transparent.
+ * Decorative — the button or tab that uses it supplies the accessible name.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<svg
+  class:list={['universal-access-icon', className]}
+  viewBox="0 0 64 64"
+  aria-hidden="true"
+  focusable="false"
+>
+  <circle cx="32" cy="32" r="31.5" fill="#3b499f"></circle>
+  <circle cx="32" cy="32" r="29.15" fill="#ffffff"></circle>
+  <circle cx="32" cy="32" r="23.15" fill="#3b499f"></circle>
+  <circle cx="32" cy="16.35" r="3.55" fill="#ffffff"></circle>
+  <path d="M16.6 23.7h30.8" fill="none" stroke="#ffffff" stroke-width="4.15" stroke-linecap="round"></path>
+  <path d="M32 23.7v11.4" fill="none" stroke="#ffffff" stroke-width="3.15" stroke-linecap="round"></path>
+  <path d="M32 34.2 25.15 47.7" fill="none" stroke="#ffffff" stroke-width="3.95" stroke-linecap="round"></path>
+  <path d="M32 34.2 38.85 47.7" fill="none" stroke="#ffffff" stroke-width="3.95" stroke-linecap="round"></path>
+</svg>
+
+<style>
+  .universal-access-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

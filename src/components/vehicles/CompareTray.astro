@@ -19,7 +19,7 @@ import { url } from '@/lib/url';
   .ctray {
     position: fixed;
     z-index: var(--z-compare, 42);
-    /* Keep clear of Adventure Compass FAB (bottom-right) + action bar */
+    /* Keep clear of the accessibility button (bottom-right) + action bar */
     left: max(0.75rem, env(safe-area-inset-left, 0px));
     right: calc(var(--companion-fab-h, 3.5rem) + 1.5rem + env(safe-area-inset-right, 0px));
     bottom: calc(var(--actionbar-h, 0px) + 0.75rem + env(safe-area-inset-bottom, 0px));
